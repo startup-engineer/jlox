@@ -99,6 +99,8 @@ class Scanner {
                     while (peek() != '\n' && !isAtEnd()) {
                         advance();
                     }
+                } else if (match('*')) {
+                    multilineComment();
                 } else {
                     addToken(SLASH);
                 }
@@ -123,6 +125,17 @@ class Scanner {
                 }
                 break;
         }
+    }
+
+    private void multilineComment() {
+        while (peek() != '*' && peekNext() != '/' && !isAtEnd()) {
+            if (peek() == '\n') {
+                line++;
+            }
+            advance();
+        }
+        advance();
+        advance();
     }
 
     private void identifier() {
