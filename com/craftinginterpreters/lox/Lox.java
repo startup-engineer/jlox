@@ -91,6 +91,8 @@ public class Lox {
             System.out.println(token);
         }
 
+        System.out.println();
+
         Parser parser = new Parser(tokens);
         Expr expression = parser.parse();
 
