@@ -336,11 +336,9 @@ class Parser {
                 if (arguments.size() >= 255) {
                     error(peek(), "Can't have more than 255 arguments.");
                 }
-                arguments.add(expression());
+                arguments.add(equality());
             } while (match(COMMA));
         }
-
-        System.out.println(arguments.size());
 
         Token paren = consume(RIGHT_PAREN, "Expect ')' after arguments.");
 
