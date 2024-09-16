@@ -98,6 +98,12 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Object visitFunctionExpr(Expr.Function expr) {
+        LoxAnonymousFunction function = new LoxAnonymousFunction(expr.params, expr.body, environment);
+        return function;
+    }
+
+    @Override
     public Object visitCallExpr(Expr.Call expr) {
         Object callee = evaluate(expr.callee);
 
