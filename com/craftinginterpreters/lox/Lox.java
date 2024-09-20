@@ -69,9 +69,9 @@ public class Lox {
             System.exit(65);
         }
 
-	if (hadRuntimeError) {
-		System.exit(70);
-	}
+        if (hadRuntimeError) {
+            System.exit(70);
+        }
     }
 
     private static void runPrompt() throws IOException {
@@ -94,13 +94,18 @@ public class Lox {
         List<Token> tokens = scanner.scanTokens();
 
         Parser parser = new Parser(tokens);
-	List<Stmt> statements = parser.parse();
+        List<Stmt> statements = parser.parse();
 
         if (hadError) {
             return;
         }
 
-	interpreter.interpret(statements);
+        Resolver resolver = new Resolver(interpreter);
+        resolver.resolve(statements);
+
+        if (hadError) return;
+
+        interpreter.interpret(statements);
     }
 
     static void error(int line, String message) {
