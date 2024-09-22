@@ -58,9 +58,11 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
         resolveLocal(expr, expr.name);
 
-        Map<String, VariableState> scope = scopes.peek();
-        if (scope.containsKey(expr.name.lexeme)) {
-            scope.get(expr.name.lexeme).isUsed = true;
+        if (!scopes.empty()) {
+          Map<String, VariableState> scope = scopes.peek();
+          if (scope.containsKey(expr.name.lexeme)) {
+              scope.get(expr.name.lexeme).isUsed = true;
+          }
         }
 
         return null;
@@ -166,6 +168,13 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     @Override
     public Void visitUnaryExpr(Expr.Unary expr) {
         resolve(expr.right);
+        return null;
+    }
+
+    @Override
+    public Void visitClassStmt(Stmt.Class stmt) {
+        declare(stmt.name);
+        define(stmt.name);
         return null;
     }
 
