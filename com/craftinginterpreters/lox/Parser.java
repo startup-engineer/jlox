@@ -382,6 +382,7 @@ class Parser {
                 expr = finishCall(expr);
             } else if (match(DOT)) {
                 Token name = consume(IDENTIFIER, "Expect property name after '.'.");
+                expr = new Expr.Get(expr, name);
             } else {
                 break;
             }
