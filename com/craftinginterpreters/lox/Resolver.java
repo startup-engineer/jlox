@@ -176,12 +176,18 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     public Void visitClassStmt(Stmt.Class stmt) {
         declare(stmt.name);
 
+        beginScope();
+        scopes.peek().put("this", new VariableState(new Token(TokenType.THIS, "this", null, stmt.name.line), true, true));
+
         for (Stmt.Function method : stmt.methods) {
             FunctionType declaration = FunctionType.METHOD;
             resolveFunction(method, declaration);
         }
 
+        endScope();
+
         define(stmt.name);
+
         return null;
     }
 
@@ -195,6 +201,12 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     public Void visitSetExpr(Expr.Set expr) {
         resolve(expr.value);
         resolve(expr.object);
+        return null;
+    }
+
+    @Override
+    public Void visitThisExpr(Expr.This expr) {
+        resolveLocal(expr, expr.keyword);
         return null;
     }
 
