@@ -8,9 +8,6 @@ class LoxClass extends LoxInstance implements LoxCallable {
     private final Map<String, LoxFunction> methods;
 
     LoxClass(String name, Map<String, LoxFunction> methods) {
-        // I need a class for the LoxInstance constructor
-        // That's going to be the metaclass for this class
-        super(new LoxClass(name + "Metaclass")); // This would end up being an infinite loop
         this.name = name;
         this.methods = methods;
     }
