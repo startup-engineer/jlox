@@ -2,14 +2,27 @@ package com.craftinginterpreters.lox;
 
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
-class LoxClass implements LoxCallable {
+class LoxClass extends LoxInstance implements LoxCallable {
     final String name;
     private final Map<String, LoxFunction> methods;
 
     LoxClass(String name, Map<String, LoxFunction> methods) {
+        super(new LoxClass(name + "Metaclass", new HashMap<String, LoxFunction>(), Interpreter.metaclass));
         this.name = name;
         this.methods = methods;
+    }
+
+    LoxClass(String name, Map<String, LoxFunction> methods, LoxClass klass) {
+        super(klass);
+        this.name = name;
+        this.methods = methods;
+    }
+
+    LoxClass() {
+        this.name = "Class";
+        this.methods = new HashMap<String, LoxFunction>();
     }
 
     LoxFunction findMethod(String name) {
@@ -18,6 +31,10 @@ class LoxClass implements LoxCallable {
         }
 
         return null;
+    }
+
+    public void addMethod(String name, LoxFunction function) {
+        methods.put(name, function);
     }
 
     @Override
