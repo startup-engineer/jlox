@@ -8,6 +8,7 @@ import java.util.Map;
 class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     final Environment globals = new Environment();
+    static final LoxClass metaclass = new LoxClass();
     private Environment environment = globals;
     private final Map<Expr, Integer> locals = new HashMap<>();
 
@@ -28,6 +29,8 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 return "<native fn>";
             }
         });
+
+        globals.define("Class", metaclass);
     }
 
     @Override

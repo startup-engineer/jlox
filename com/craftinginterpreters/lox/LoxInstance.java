@@ -14,6 +14,8 @@ class LoxInstance {
     }
 
     LoxInstance() {
+        System.out.println("lol");
+        System.out.println(this);
         if (this instanceof LoxClass) this.klass = (LoxClass)this;
         addMethods();
     }

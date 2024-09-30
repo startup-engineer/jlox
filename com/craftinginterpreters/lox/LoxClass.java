@@ -7,12 +7,22 @@ import java.util.HashMap;
 class LoxClass extends LoxInstance implements LoxCallable {
     final String name;
     private final Map<String, LoxFunction> methods;
-    private static final LoxClass metaclass = new LoxClass("Class", new HashMap<String, LoxFunction>());
 
     LoxClass(String name, Map<String, LoxFunction> methods) {
-        super(metaclass);
+        super(new LoxClass(name + "Metaclass", new HashMap<String, LoxFunction>(), Interpreter.metaclass));
         this.name = name;
         this.methods = methods;
+    }
+
+    LoxClass(String name, Map<String, LoxFunction> methods, LoxClass klass) {
+        super(klass);
+        this.name = name;
+        this.methods = methods;
+    }
+
+    LoxClass() {
+        this.name = "Class";
+        this.methods = new HashMap<String, LoxFunction>();
     }
 
     LoxFunction findMethod(String name) {
