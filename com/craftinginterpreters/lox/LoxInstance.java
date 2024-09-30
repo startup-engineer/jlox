@@ -18,6 +18,10 @@ class LoxInstance {
         addMethods();
     }
 
+    LoxClass getLoxClass() {
+        return klass;
+    }
+
     Object get(Token name) {
         if (fields.containsKey(name.lexeme)) {
             return fields.get(name.lexeme);

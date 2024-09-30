@@ -259,6 +259,21 @@ class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         }
 
         LoxClass klass = new LoxClass(stmt.name.lexeme, methods);
+
+        LoxClass metaclass = klass.getLoxClass();
+        for (Stmt.Function staticMethod : stmt.staticMethods) {
+            LoxFunction function = new LoxFunction(
+                staticMethod,
+                environment,
+                false
+            );
+
+            metaclass.addMethod(
+                staticMethod.name.lexeme,
+                function
+            );
+        }
+
         environment.assign(stmt.name, klass);
         return null;
     }

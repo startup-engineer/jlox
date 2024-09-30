@@ -33,6 +33,10 @@ class LoxClass extends LoxInstance implements LoxCallable {
         return null;
     }
 
+    public void addMethod(String name, LoxFunction function) {
+        methods.put(name, function);
+    }
+
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
         LoxInstance instance = new LoxInstance(this);
