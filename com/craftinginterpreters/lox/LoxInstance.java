@@ -10,12 +10,12 @@ class LoxInstance {
 
     LoxInstance(LoxClass klass) {
         this.klass = klass;
-        addMethods();
+        addSharedMethods();
     }
 
     LoxInstance() {
         if (this instanceof LoxClass) this.klass = (LoxClass)this;
-        addMethods();
+        addSharedMethods();
     }
 
     LoxClass getLoxClass() {
@@ -37,7 +37,7 @@ class LoxInstance {
         fields.put(name.lexeme, value);
     }
 
-    void addMethods() {
+    void addSharedMethods() {
         this.fields.put("klass", new LoxCallable() {
             @Override
             public int arity() {
