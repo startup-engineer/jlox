@@ -5,22 +5,27 @@ import java.util.Map;
 import java.util.HashMap;
 
 class LoxClass extends LoxInstance implements LoxCallable {
+
     final String name;
+    final LoxClass superclass;
     private final Map<String, LoxFunction> methods;
 
-    LoxClass(String name, Map<String, LoxFunction> methods) {
+    LoxClass(String name, LoxClass superclass, Map<String, LoxFunction> methods) {
         super(new LoxClass(name + "Metaclass", new HashMap<String, LoxFunction>(), Interpreter.metaclass));
+        this.superclass = superclass;
         this.name = name;
         this.methods = methods;
     }
 
     LoxClass(String name, Map<String, LoxFunction> methods, LoxClass klass) {
         super(klass);
+        this.superclass = null;
         this.name = name;
         this.methods = methods;
     }
 
     LoxClass() {
+        this.superclass = null;
         this.name = "Class";
         this.methods = new HashMap<String, LoxFunction>();
     }
@@ -51,7 +56,9 @@ class LoxClass extends LoxInstance implements LoxCallable {
     @Override
     public int arity() {
         LoxFunction initializer = findMethod("init");
-        if (initializer == null) return 0;
+        if (initializer == null) {
+            return 0;
+        }
         return initializer.arity();
     }
 

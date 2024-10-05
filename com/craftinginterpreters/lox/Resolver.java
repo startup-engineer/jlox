@@ -20,6 +20,7 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     private class VariableState {
+
         Token token;
         boolean isDefined;
         boolean isUsed;
@@ -67,10 +68,10 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         resolveLocal(expr, expr.name);
 
         if (!scopes.empty()) {
-          Map<String, VariableState> scope = scopes.peek();
-          if (scope.containsKey(expr.name.lexeme)) {
-              scope.get(expr.name.lexeme).isUsed = true;
-          }
+            Map<String, VariableState> scope = scopes.peek();
+            if (scope.containsKey(expr.name.lexeme)) {
+                scope.get(expr.name.lexeme).isUsed = true;
+            }
         }
 
         return null;
@@ -108,7 +109,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     public Void visitIfStmt(Stmt.If stmt) {
         resolve(stmt.condition);
         resolve(stmt.thenBranch);
-        if (stmt.elseBranch != null) resolve(stmt.elseBranch);
+        if (stmt.elseBranch != null) {
+            resolve(stmt.elseBranch);
+        }
         return null;
     }
 
@@ -189,6 +192,15 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
         declare(stmt.name);
         define(stmt.name);
+
+        if (stmt.superclass != null
+                && stmt.name.lexeme.equals(stmt.superclass.name.lexeme)) {
+            Lox.error(stmt.superclass.name, "A class can't inherit from itself.");
+        }
+
+        if (stmt.superclass != null) {
+            resolve(stmt.superclass);
+        }
 
         beginScope();
         scopes.peek().put("this", new VariableState(new Token(TokenType.THIS, "this", null, stmt.name.line), true, true));
@@ -296,7 +308,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     private void declare(Token name) {
-        if (scopes.isEmpty()) return;
+        if (scopes.isEmpty()) {
+            return;
+        }
 
         Map<String, VariableState> scope = scopes.peek();
         if (scope.containsKey(name.lexeme)) {
@@ -307,7 +321,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     private void define(Token name) {
-      if (scopes.isEmpty()) return;
-      scopes.peek().get(name.lexeme).isDefined = true;
+        if (scopes.isEmpty()) {
+            return;
+        }
+        scopes.peek().get(name.lexeme).isDefined = true;
     }
 }
